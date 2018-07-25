@@ -1,36 +1,58 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="http://chat.vuejs.org/" target="_blank" rel="noopener">Vue Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="http://vuejs-templates.github.io/webpack/" target="_blank" rel="noopener">Docs for This Template</a></li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li><a href="http://router.vuejs.org/" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="http://vuex.vuejs.org/" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="http://vue-loader.vuejs.org/" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
-  </div>
+    <div class="container">
+      <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+      </fb:login-button>
+      <div id="status">
+      </div>
+    </div>
 </template>
 
 <script>
-export default {
-  name: 'hello',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js PWA'
+  function statusChangeCallback(response) {
+    console.log('statusChangeCallback');
+    console.log(response);
+    if (response.status === 'connected') {
+      testAPI();
+    } else {
+      document.getElementById('status').innerHTML = 'Please log ' +
+        'into this app.';
     }
   }
-}
-</script>
+  function checkLoginState() {
+    FB.getLoginStatus(function(response) {
+      statusChangeCallback(response);
+    });
+  }
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '228210221137701',
+      cookie     : true, 
+      xfbml      : true,
+      version    : 'v3.0'
+    });
+    FB.getLoginStatus(function(response) {
+      statusChangeCallback(response);
+    });
+
+  };
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "https://connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+
+  function testAPI() {
+    console.log('Welcome!  Fetching your information.... ');
+    FB.api('/me', function(response) {
+      console.log('Successful login for: ' + response.name);
+      document.getElementById('status').innerHTML =
+        'Thanks for logging in, ' + response.name + '!';
+    });
+  }
+</script>
 <style>
 h1, h2 {
   font-weight: normal;
