@@ -1,6 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Hello from '@/components/Hello'
+import Album from '@/components/Album'
+
+
+Vue.component('Album', Album);
 
 Vue.use(Router)
 

@@ -4,14 +4,25 @@
          
     </header>
     <main>      
-      <router-view></router-view>
+      <router-view v-if="state == 'login'" @albumPage="albumPage"></router-view>
+      <Album v-else-if="state == 'album'"></Album>
+      <Album v-else>Error</Album>
     </main>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'app'
+  data() {
+  	return {
+  		state: 'login'
+  	}
+  },
+  methods: {
+  	albumPage() {
+  		this.state = 'album';
+  	}
+  }
 }
 </script>
 

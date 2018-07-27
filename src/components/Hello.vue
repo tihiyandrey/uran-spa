@@ -1,29 +1,19 @@
 <template>
+  <div id="new">
     <div class="container">
-      <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
-      </fb:login-button>
-      <div id="status">
+      <div class="login-block row justify-content-center align-items-center">
+        <div class="col-md-3">
+          <div class="inner cover">
+            <h5 class="text-center mb-5">App Login</h5>
+            <button type="button" class="btn btn-primary btn-block" @click="openFbLoginDialog">Facebook Login</button>              
+          </div>
+        </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
-  function statusChangeCallback(response) {
-    console.log('statusChangeCallback');
-    console.log(response);
-    if (response.status === 'connected') {
-      testAPI();
-    } else {
-      document.getElementById('status').innerHTML = 'Please log ' +
-        'into this app.';
-    }
-  }
-  function checkLoginState() {
-    FB.getLoginStatus(function(response) {
-      statusChangeCallback(response);
-    });
-  }
-
   window.fbAsyncInit = function() {
     FB.init({
       appId      : '228210221137701',
@@ -32,7 +22,7 @@
       version    : 'v3.0'
     });
     FB.getLoginStatus(function(response) {
-      statusChangeCallback(response);
+      
     });
 
   };
@@ -44,31 +34,39 @@
     fjs.parentNode.insertBefore(js, fjs);
   }(document, 'script', 'facebook-jssdk'));
 
-  function testAPI() {
-    console.log('Welcome!  Fetching your information.... ');
-    FB.api('/me', function(response) {
-      console.log('Successful login for: ' + response.name);
-      document.getElementById('status').innerHTML =
-        'Thanks for logging in, ' + response.name + '!';
-    });
+  export default {
+    methods: {
+    openFbLoginDialog () {
+      FB.login(this.checkLoginState, { scope: 'email' })
+    },
+    checkLoginState: function (response) {
+      if (response.status === 'connected') {        
+        this.$emit('albumPage');
+      } else if (response.status === 'not_authorized') {
+        alert('Sorry, something wrong with app!');
+      } else {
+        alert('Please try again login');
+      }
+    },
   }
+ };
 </script>
-<style>
-h1, h2 {
-  font-weight: normal;
+<style scoped>
+.login-block {
+  height: 100vh;
 }
-
-ul {
-  list-style-type: none;
-  padding: 0;
+.inner {
+  padding: 2rem;
 }
-
-li {
-  display: inline-block;
-  margin: 0 10px;
+.inner.cover {
+  border: 1px solid #f0f0f0;
+  padding: 2.5rem;
 }
-
-a {
-  color: #35495E;
+.cover {
+  padding: 0 1.5rem;
+}
+.cover .btn-lg {
+  padding: .75rem 1.25rem;
+  font-weight: bold;
 }
 </style>
